@@ -33,6 +33,15 @@
 
             </div>
         @endif
+            @if(session()->has('add'))
+                <div class="alert alert-success fade show alert-dismissible">
+                    <strong> {{session()->get('add')}} </strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                        <span aria-hidden="true"> &times; </span>
+                    </button>
+
+                </div>
+            @endif
 
 
         <div class="col-xl-12">
@@ -154,6 +163,16 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="tab6">
+                                            <form action="{{route("invoiceattachment.store")}}" method="post" enctype="multipart/form-data">
+                                                @csrf
+                                                <div class="custome-file">
+                                                    <input type="file" class="form-control" id="customeFile" name="file_name" required>
+                                                    <input type="hidden" class="form-control" id="customeFile" name="invoice_number" value="{{$invoice->invoice_number}}" required>
+                                                    <input type="hidden" class="form-control" id="customeFile" name="invoice_id" value="{{$invoice->id}}" required>
+
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-sm"> رفع المرفق </button>
+                                            </form>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered">
                                                 <thead>
@@ -207,10 +226,9 @@
                         <h6 class="modal-title"> حذف المرفق   </h6><button aria-label="Close" class="close" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
                     </div>
                     @if(isset($attach))
-                        <form action="{{url('delete_attach')}}/{{$attach->id}}" method="post">
-
-                            {{csrf_field()}}
-
+                        <form action="{{route('invoiceattachment.destroy',$attach->id)}}" method="post">
+                            {{method_field('delete')}}
+                            @csrf
                             <div class="modal-body">
                                 <input type="hidden" name="id_file" id="id_file">
                                 <input type="hidden" name="invoice_number" id="invoice_number">
@@ -237,18 +255,7 @@
     </div>
     <!-- main-content closed -->
 @endsection
-<script>
-    $("#modaldemo_delete").on('show.bs.modal',function (event){
-        var button = $(event.relatedTarget);
-        var id_file = button.data('id_file');
-        var invoice_number = button.data('invoice_number');
-        var file_name = button.data('file_name');
-        var modal = $(this);
-        modal.find('.modal-body #id_file').val(id_file);
-        modal.find('.modal-body #invoice_number').val(invoice_number);
-        modal.find('.modal-body #file_name').val(file_name);
-    })
-</script>
+
 @section('js')
     <!--Internal  Datepicker js -->
     <script src="{{URL::asset('assets/plugins/jquery-ui/ui/widgets/datepicker.js')}}"></script>
@@ -266,4 +273,17 @@
     <script src="{{URL::asset('assets/plugins/clipboard/clipboard.js')}}"></script>
     <!-- Internal Prism js-->
     <script src="{{URL::asset('assets/plugins/prism/prism.js')}}"></script>
+
+    <script>
+        $("#modaldemo_delete").on('show.bs.modal',function (event){
+            var button = $(event.relatedTarget);
+            var id_file = button.data('id_file');
+            var invoice_number = button.data('invoice_number');
+            var file_name = button.data('file_name');
+            var modal = $(this);
+            modal.find('.modal-body #id_file').val(id_file);
+            modal.find('.modal-body #invoice_number').val(invoice_number);
+            modal.find('.modal-body #file_name').val(file_name);
+        })
+    </script>
 @endsection

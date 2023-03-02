@@ -73,7 +73,7 @@
                                     <label for="">  تاريخ الفاتورة </label>
 
                                     <div class="input-group">
-                                        <input class="form-control" placeholder="MM/DD/YYYY" type="date" name="invoice_date" id="invoice_date">
+                                        <input class="form-control" placeholder="MM/DD/YYYY" type="date" value="{{date('Y-m-d')}}" name="invoice_date" id="invoice_date">
                                     </div>
                                 </div>
 

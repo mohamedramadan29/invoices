@@ -98,9 +98,9 @@ class InvoicesController extends Controller
      * @param  \App\Models\invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function show(invoices $invoices)
+    public function show($id)
     {
-        //
+
     }
 
     /**
@@ -109,9 +109,12 @@ class InvoicesController extends Controller
      * @param  \App\Models\invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function edit(invoices $invoices)
+    public function edit($id)
     {
-        //
+        $invoice = invoices::where('id',$id)->first();
+        $sections = sections::all();
+        return view('invoices.edit',compact('invoice','sections'));
+
     }
 
     /**
@@ -121,9 +124,26 @@ class InvoicesController extends Controller
      * @param  \App\Models\invoices  $invoices
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, invoices $invoices)
+    public function update(Request $request)
     {
-        //
+        $invoice = invoices::findOrFail($request->id);
+        $invoice->update([
+            'invoice_number'=>$request->invoice_number,
+            'invoice_date'=>$request->invoice_date,
+            'due_date'=>$request->due_date,
+            'product'=>$request->product,
+            'section_id'=>$request->section,
+            'amount_collection'=>$request->amount_collection,
+            'amount_commision'=>$request->amount_commision,
+            'discount'=>$request->discount,
+            'value_vat'=>$request->value_vat,
+            'rate_vat'=>$request->rate_vat,
+            'total'=>$request->total,
+            'note'=>$request->note,
+            'user'=>Auth::user()->name
+        ]);
+        session()->flash('edit','تم تعديل الفاتورة بنجاح ');
+        return  back();
     }
 
     /**
